@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Meme Creator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="header-banner">
+        <div class="header-text">PERSONAL MEME CREATOR</div>
+        <div class="header-buttons">
+            <a href="#" class="header-button">
+                <i class="fas fa-shopping-cart"></i>
+                Buy Now
+            </a>
+            <a href="#" class="header-button">
+                <i class="fab fa-twitter"></i>
+                Twitter
+            </a>
+            <a href="#" class="header-button">
+                <i class="fab fa-telegram"></i>
+                Telegram
+            </a>
+        </div>
+    </div>
+    <div class="binary-rain"></div>
+    <div class="chat-container">
+        <div class="chat-box">
+            <div class="messages" id="chat-messages">
+                <!-- Initial AI message -->
+                <div class="message ai">
+                    Welcome! I'm your AI Memecoin Idea Generator. I can help you create unique and creative memecoin concepts. 
+                    Just describe what you're looking for, or ask me to generate a random memecoin idea!
+                </div>
+            </div>
+            <div class="input-area">
+                <textarea id="user-input" placeholder="Describe your memecoin idea or type 'random' for a suggestion..."></textarea>
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    <img src="../images/bottomright.png" alt="bottom right image" class="bottom-right-image">
+    <script src="js/main.js"></script>
+    <script src="js/binary-rain.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const TARGET_TEXT = "PERSONAL MEME CREATOR";
+            const targetPositions = [];
+            let targetLettersDropped = false;
+
+            // Calculate target positions
+            const calculateTargetPositions = () => {
+                const containerWidth = window.innerWidth;
+                const textWidth = TARGET_TEXT.length * 16; // 16px per character
+                const startX = (containerWidth - textWidth) / 2;
+                
+                TARGET_TEXT.split('').forEach((char, index) => {
+                    targetPositions.push({
+                        x: startX + (index * 16),
+                        y: window.innerHeight - 40,
+                        char: char,
+                        dropped: false
+                    });
+                });
+            };
+
+            function createTargetLetter(position) {
+                const binary = document.createElement('div');
+                binary.className = 'binary target-letter';
+                binary.innerText = position.char;
+                binary.style.left = position.x + 'px';
+                binary.style.top = '-20px';
+                binary.style.animationDuration = '6s';
+                
+                document.querySelector('.binary-rain').appendChild(binary);
+                
+                binary.addEventListener('animationend', () => {
+                    binary.classList.add('landed');
+                    position.dropped = true;
+                });
+            }
+
+            function createBinary() {
+                const rain = document.querySelector('.binary-rain');
+                const binary = document.createElement('div');
+                binary.className = 'binary';
+                const isOne = Math.random() < 0.5;
+                binary.innerText = isOne ? '1' : 'O';
+                if (isOne) binary.classList.add('one');
+                
+                binary.style.left = Math.random() * 100 + '%';
+                binary.style.animationDuration = Math.random() * 3 + 2 + 's';
+                
+                rain.appendChild(binary);
+                
+                setTimeout(() => {
+                    binary.remove();
+                }, parseFloat(binary.style.animationDuration) * 1000);
+            }
+
+            // Drop target letters with minimal delay
+            function dropTargetLetters() {
+                if (!targetLettersDropped) {
+                    targetLettersDropped = true;
+                    targetPositions.forEach((pos, index) => {
+                        setTimeout(() => {
+                            createTargetLetter(pos);
+                        }, index * 30);
+                    });
+                }
+            }
+
+            // Initialize
+            calculateTargetPositions();
+            setInterval(createBinary, 100);
+            
+            // Start dropping target letters after a delay
+            setTimeout(dropTargetLetters, 1000);
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                addMessage(message, 'user');
+                
+                // Generate AI response
+                const aiResponse = generateMemeResponse(message);
+                addMessage(aiResponse, 'ai');
+                
+                // Clear input
+                input.value = '';
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function generateMemeResponse(userInput) {
+            const lowerInput = userInput.toLowerCase();
+            
+            if (lowerInput === 'random') {
+                const randomIdeas = [
+                    "How about '$DOGE2MARS' - A memecoin that combines Dogecoin's popularity with space exploration memes?",
+                    "Consider '$CATOSHI' - A feline-themed coin that pays homage to Bitcoin's creator!",
+                    "What about '$MEMEVERSE' - A coin celebrating the multiverse of internet memes?",
+                    "Try '$PEPENEXT' - The next evolution in Pepe-themed cryptocurrencies!",
+                    "Maybe '$WOJAK' - A coin that captures the essence of trading emotions!"
+                ];
+                return randomIdeas[Math.floor(Math.random() * randomIdeas.length)];
+            }
+            
+            // Respond to specific inputs
+            if (lowerInput.includes('cat') || lowerInput.includes('kitten')) {
+                return "Here's a cat-themed idea: '$NYANFI' - A DeFi platform with cat memes! 🐱";
+            }
+            
+            if (lowerInput.includes('dog') || lowerInput.includes('puppy')) {
+                return "How about '$WOOFSWAP' - A canine-powered DEX with playful dog themes! 🐕";
+            }
+            
+            // Default response with customization based on input
+            return `Interesting idea! Let's call it '$${userInput.toUpperCase().slice(0, 5)}COIN' - A memecoin that ${generateRandomFeature()}`;
+        }
+
+        function generateRandomFeature() {
+            const features = [
+                "combines DeFi with community governance!",
+                "rewards holders with daily meme NFTs!",
+                "donates a portion of fees to meme creators!",
+                "lets users vote on the next viral meme trend!",
+                "creates a marketplace for meme trading!"
+            ];
+            return features[Math.floor(Math.random() * features.length)];
+        }
+    </script>
+</body>
+</html>

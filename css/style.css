@@ -1,0 +1,438 @@
+:root {
+    --primary-color: #2a2a72;
+    --secondary-color: #009ffd;
+    --background-color: #000000;
+    --text-color: #ffffff;
+    --chat-bg: rgba(45, 45, 66, 0.8);
+    --user-message: rgba(52, 152, 219, 0.8);
+    --bot-message: rgba(46, 204, 113, 0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--secondary-color), #00ff9d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+.chat-container {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40%;
+    z-index: 1;
+}
+
+.chat-box {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.messages {
+    height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.message.user {
+    background-color: rgba(0, 255, 0, 0.1);
+    margin-left: 20px;
+}
+
+.message.ai {
+    background-color: rgba(0, 0, 0, 0.3);
+    margin-right: 20px;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+}
+
+.input-area textarea {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    resize: none;
+    height: 40px;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    background-color: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    cursor: pointer;
+    font-family: 'Consolas', 'Courier New', monospace;
+    transition: background-color 0.3s;
+}
+
+.input-area button:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 0.5);
+}
+
+.binary-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.binary {
+    position: absolute;
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 16px;
+    opacity: 0;
+    animation: fall linear infinite;
+    transform: scaleY(1.5);
+    transform-origin: center;
+}
+
+.binary.one {
+    transform: scaleY(1.5) scaleX(0.75);
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100%);
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.binary.target-reached {
+    color: #00ff00;
+    text-shadow: 0 0 5px #00ff00;
+    font-weight: bold;
+}
+
+.target-text {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 0 0 5px #00ff00;
+    z-index: 1;
+}
+
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background-image: url('../images/background.png');
+    background-size: 150% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scale(0.5);
+    transform-origin: center center;
+}
+
+.bottom-right-image {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 150px;
+    height: auto;
+    z-index: -1;
+    border-radius: 15px;
+    box-shadow: 
+        0 0 0 2px rgba(200, 200, 200, 0.8),
+        0 0 10px 5px rgba(200, 200, 200, 0.3),
+        inset 0 0 15px 5px rgba(0, 0, 0, 0.8);
+    padding: 5px;
+    background: black;
+}
+
+.header-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: rgba(10, 10, 10, 0.95);
+    z-index: 1000;
+    box-shadow: 
+        0 2px 15px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(30, 30, 30, 0.8);
+}
+
+.header-text {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 
+        0 0 5px rgba(0, 255, 0, 0.7),
+        0 0 10px rgba(0, 255, 0, 0.3);
+    letter-spacing: 2px;
+    z-index: 1001;
+}
+
+.target-letter {
+    position: absolute;
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 16px;
+    animation: targetFall linear forwards;
+    text-shadow: 0 0 5px #00ff00;
+    z-index: 1;
+}
+
+.target-letter.landed {
+    animation: none;
+    position: fixed;
+    bottom: 20px;
+}
+
+@keyframes targetFall {
+    0% {
+        transform: translateY(-100%);
+        opacity: 1;
+    }
+    98% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh - 40px));
+        opacity: 1;
+    }
+}
+
+.header-buttons {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1001;
+}
+
+.header-button {
+    padding: 10px 20px;
+    border: 1px solid #00ff00;
+    background-color: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+}
+
+.buy-button {
+    padding: 10px 25px;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.social-button {
+    padding: 10px;
+    font-size: 20px;
+}
+
+.header-button:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    transform: translateY(-1px);
+}
+
+.header-button i {
+    font-size: 20px;
+}
+
+.ai-assistant {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.ai-assistant.zeep {
+    left: 150px;
+}
+
+.ai-assistant.jeff {
+    right: 150px;
+}
+
+.ai-character {
+    width: 100%;
+    height: 100%;
+    border: 3px solid #00ff00;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 0 30px rgba(0, 255, 0, 0.2),
+        inset 0 0 30px rgba(0, 255, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: #00ff00;
+    overflow: hidden;
+}
+
+/* Zeep's original circuit pattern */
+.zeep .ai-character {
+    background-image: linear-gradient(45deg, 
+        rgba(0, 255, 0, 0.1) 25%, 
+        transparent 25%, 
+        transparent 75%, 
+        rgba(0, 255, 0, 0.1) 75%);
+    background-size: 10px 10px;
+}
+
+/* Keep Chill Jeff's custom design */
+.jeff .ai-character {
+    background-image: 
+        linear-gradient(135deg, 
+            rgba(0, 255, 0, 0.1) 25%, 
+            transparent 25%, 
+            transparent 75%, 
+            rgba(0, 255, 0, 0.1) 75%),
+        linear-gradient(45deg,
+            rgba(0, 255, 0, 0.05) 25%, 
+            transparent 25%, 
+            transparent 75%, 
+            rgba(0, 255, 0, 0.05) 75%);
+    background-size: 20px 20px, 15px 15px;  /* Slightly larger pattern than Zeep */
+    background-position: 0 0, 10px 10px;    /* Offset for second pattern */
+}
+
+.ai-name {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #00ff00;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    letter-spacing: 2px;
+}
+
+/* Robot-specific styles */
+.zeep .ai-character {
+    /* Circuit pattern background */
+    background-image: linear-gradient(45deg, 
+        rgba(0, 255, 0, 0.1) 25%, 
+        transparent 25%, 
+        transparent 75%, 
+        rgba(0, 255, 0, 0.1) 75%);
+    background-size: 10px 10px;
+}
+
+.jeff .ai-character {
+    /* Different circuit pattern */
+    background-image: radial-gradient(
+        circle at center,
+        rgba(0, 255, 0, 0.1) 2px,
+        transparent 2px
+    );
+    background-size: 15px 15px;
+}
